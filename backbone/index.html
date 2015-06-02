@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>My Awesome Slide Show using my own MVC approach (not even close to framework)</title>
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.2.0/backbone-min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.min.js"></script>
+
+    <script>
+        var apiUrl = 'https://api2.healthline.com/api/service/2.0/slideshow/content?partnerId=7eef498c-f7fa-4f7c-81fd-b1cc53ac7ebc&contentid=17103&includeLang=en';
+        var App = App || {
+                    SlidesUrl: apiUrl
+                };
+    </script>
+    <script src="collections/SlideCollection.js"></script>
+    <script src="view/SlideView.js"></script>
+    <script src="view/SlideShowView.js"></script>
+    <script src="app.js"></script>
+
+    <style>
+        * {
+            margin: 0px;
+            paddin: 0px;
+        }
+        a {
+            color: #00abc7;
+        }
+        body {
+            margin: 0 auto;
+            max-width: 800px;
+            font-size: 16px;
+            font-family: Arial,Helvetica,sans-serif
+        }
+        .hide { display: none;}
+        #health-info {
+            margin-top: 20px;
+        }
+        #title { color:#8F4399; }
+        #summary {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+
+        .slideshow {
+            width: 600px;
+            overflow:hidden;
+            position: relative;
+            margin: 0 auto;
+        }
+        .content-container {
+            overflow: hidden;
+        }
+        .content-container .slide-body {
+            overflow: hidden;
+            color: #777;
+        }
+        .content-container .slide-body p {
+            padding-right: 10px;
+        }
+        .content-container .slide-img {
+            float: right;
+        }
+
+        ul { style-list-type : none; width: 2000px; margin: 0px; padding: 0px;}
+        ul > li {
+            display: inline-block;
+            width: 600px;
+
+            position: relative;
+            overflow: hidden;
+
+        }
+        .slide-title { color:#8F4399; margin-bottom: 10px; }
+        #button-container { margin-top: 20px; margin-bottom: 20px;}
+        button { display: inline-block; }
+        button#prev-slide { float: left; }
+        button#next-slide { float: right; }
+        #sort-by-container h3, #sort-by-container form { float: left; }
+        #sort-by-container form {  margin-left: 10px; position: relative; top: 2px; }
+        #sort-by-container form input {  margin-left: 5px; }
+        .hidden {display: none;}
+        img.tracking { height: 1px; width: 1px; }
+        .clearfix:before,
+        .clearfix:after {
+            content: "";
+            display: table;
+        }
+
+        .clearfix:after {
+            clear: both;
+        }
+        button {
+            background-color: #8f4399;
+            padding: 10px;
+            border: none;
+            color: white;
+            border-radius: 3px;
+
+        }
+        button.disable {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+    </style>
+</head>
+<body>
+
+<section id="health-info">
+</section>
+
+<script id="slideshow-template" type="text/x-handlebars-template">
+    <h1 id="title"> {{ page_title }}</h1>
+    <div id="summary">{{summary }}</div> 
+    <div>
+        <div class="slideshow clearfix">
+            <ul class="slides"></ul>
+            <div id="button-container" class="clearfix">
+                <button id="prev-slide"><< Previous</button><button id="next-slide">Next >></button>
+            </div>
+            <div id="sort-by-container" class="clearfix">
+                <h3>Sort by:</h3>
+                <form id="sort-control">
+                    <label for="alpha">Default</label>
+                    <input type="radio" name="sort" id="male" value="default" {{#if is_default}}checked {{/if}} />
+                    <label for="alpha">Alpha</label>
+                    <input type="radio" name="sort" id="alpha" value="alpha" {{#if is_alpha}}checked {{/if}} />
+                </form>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script id="slide-template" type="text/x-handlebars-template">
+    <h2 class="slide-title">{{{ title }}}</h2>
+    <div class="content-container">
+        <img class="slide-img" load-src="http://www.healthline.com/{{ image.imageUrl }}" alt="">
+        <div class="slide-body">{{{ body }}}</div>
+    </div>
+</script>
+
+
+<script src="app.js"></script>
+</body>
+</html>
